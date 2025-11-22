@@ -8,6 +8,7 @@ Based on [foodini/voyager](https://github.com/foodini/voyager).
 
 The Voyager Golden Record contains 116 images encoded as analog audio signals at **384 kHz** sample rate (78 images per stereo channel).
 ![](left_021.png)
+
 ![](left_076.png)
 
 ### Signal Format
