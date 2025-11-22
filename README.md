@@ -47,6 +47,7 @@ Some images are transmitted as three separate frames (Red, Green, Blue channels)
 
 ## Requirements
 
+### For Image Extraction
 - Python 3
 - NumPy
 - SciPy
@@ -56,7 +57,17 @@ Some images are transmitted as three separate frames (Red, Green, Blue channels)
 pip install numpy scipy
 ```
 
+### For Image Encoding
+- All above requirements, plus:
+- Pillow (PIL) for image processing and automatic resizing
+
+```bash
+pip install numpy scipy pillow
+```
+
 ## Usage
+
+### Image Extraction (from Voyager Golden Record)
 
 ```bash
 # From WAV file (384 kHz stereo)
@@ -67,6 +78,76 @@ python extract_images.py 384kHzStereo.flac
 ```
 
 Images are extracted to `extracted_images/` directory in PGM format (grayscale).
+
+### Image Encoding/Decoding
+
+This repository also includes tools to encode your own images into Voyager-compatible audio files:
+
+#### Single Image Encoding
+
+```bash
+# Encode single image to WAV (Voyager format)
+python encode_image.py image.png output.wav
+```
+
+**Features:**
+- Automatic resizing to 540×364 pixels
+- Letterbox with black bars for different aspect ratios
+- Supports PNG, JPG, PGM formats
+- Compatible with `extract_images.py`
+
+#### Stereo Image Encoding (Two Images)
+
+```bash
+# Encode two images to stereo WAV (simplified format)
+python encode_simple_stereo.py left_image.png right_image.png output.wav
+
+# Decode stereo WAV back to two images
+python extract_simple_stereo.py input.wav output_directory/
+```
+
+**Features:**
+- Two images in one stereo file (left/right channels)
+- Perfect quality preservation
+- Automatic resizing with letterbox
+- Direct pixel-to-audio mapping
+- Shorter files (~0.5s vs 7s)
+- Outputs both PGM and PNG formats
+
+#### Stereo Image Encoding (Voyager-compatible)
+
+```bash
+# Encode two images to Voyager-compatible stereo WAV
+python encode_stereo_images.py left_image.png right_image.png output.wav
+
+# Decode with Voyager-compatible decoder
+python extract_stereo_images.py input.wav output_directory/
+```
+
+**Note:** The simple format (`encode_simple_stereo.py`) provides better quality and efficiency for custom image encoding, while the Voyager-compatible format maintains the original signal structure.
+
+### Examples
+
+```bash
+# Basic workflow: encode and decode
+python encode_simple_stereo.py photo1.jpg photo2.png my_images.wav
+python extract_simple_stereo.py my_images.wav decoded/
+
+# Single image encoding
+python encode_image.py portrait.png encoded_portrait.wav
+
+# Different input formats supported
+python encode_simple_stereo.py image.jpg image.png output.wav
+python encode_simple_stereo.py image.pgm image.bmp output.wav
+```
+
+### Output Formats
+
+| Script | Input | Output | Duration | Quality |
+|--------|-------|--------|----------|---------|
+| `encode_image.py` | 1 image | WAV mono ~7s | Long | Voyager-compatible |
+| `encode_simple_stereo.py` | 2 images | WAV stereo ~0.5s | Short | Perfect |
+| `encode_stereo_images.py` | 2 images | WAV stereo ~7s | Long | Voyager-compatible |
 
 ## Audio File Recommendations
 
